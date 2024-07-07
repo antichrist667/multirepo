@@ -37,7 +37,7 @@ jobs:
     - name: Paths of docker-compose
       run: |
         sed -i 's|build: \./|build: ../|g' ./docker-compose.yml
-        echo "Content Updated de docker-compose.yml:"
+        echo "Content Updated of docker-compose.yml:"
         cat ./docker-compose.yml
 
     - name: Execute Docker Compose
