@@ -1,4 +1,3 @@
-// registration-service/server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -8,21 +7,21 @@ const port = 3001;
 // Middleware
 app.use(bodyParser.json());
 
-// Lista de usuarios en memoria
+// In-memory user list
 const users = [];
 
-// Endpoint para registrar un nuevo usuario
+// Endpoint to register a new user
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
   
-  // Agregar el nuevo usuario a la lista en memoria
+  // Add the new user to the in-memory list
   const newUser = { id: users.length + 1, username, password };
   users.push(newUser);
   
   res.status(201).json({ message: 'Usuario registrado exitosamente', user: newUser });
 });
 
-// Endpoint para obtener todos los usuarios
+// Endpoint to get all users
 app.get('/users', (req, res) => {
   res.json(users);
 });
