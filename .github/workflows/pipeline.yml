@@ -1,0 +1,45 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+      
+      
+    - name: Logged in Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+    - name: Build up Dockers
+      run: |
+        services=("registration-service" "login-service" "update-service")
+        
+        for service in "${services[@]}"
+        do
+          if [ -d "$service" ]; then
+            docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/$service:latest ./$service
+            docker push ${{ secrets.DOCKERHUB_USERNAME }}/$service:latest
+          else
+            echo "Failed to find the path of directory of service $service"
+            exit 1
+          fi
+        done
+
+    - name: Paths of docker-compose
+      run: |
+        sed -i 's|build: \./|build: ../|g' ./docker-compose.yml
+        echo "Content Updated de docker-compose.yml:"
+        cat ./docker-compose.yml
+
+    - name: Execute Docker Compose
+      run: |
+        docker-compose -f ./docker-compose.yml up -d
