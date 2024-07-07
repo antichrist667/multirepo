@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  microservice-registration:
+   build: ./registration-service
+   ports:
+     - 8082:3001
+  microservice-login:
+   build: ./login-service
+   ports:
+     - 8083:3002
+   environment:
+     - JWT_SECRET=your_jwt_secret
+  microservice-update:
+   build: ./update-service
+   ports:
+     - 8084:3003
+   environment:
+     - JWT_SECRET=your_jwt_secret
