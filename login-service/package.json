@@ -1,0 +1,17 @@
+{
+  "name": "login-service",
+  "version": "1.0.0",
+  "description": "Microservice login",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "license": "ISC"
+}

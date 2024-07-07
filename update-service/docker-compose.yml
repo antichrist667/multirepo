@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  update-service:
+    build: .
+    ports:
+      - "3003:3003"
+    networks:
+      - microservices-network
+    environment:
+      - JWT_SECRET=your_jwt_secret
+networks:
+  microservices-network:
+    external: true

@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  login-service:
+    build: .
+    ports:
+      - "3002:3002"
+    networks:
+      - microservices-network
+    environment:
+      - JWT_SECRET=your_jwt_secret
+networks:
+  microservices-network:
+    external: true
