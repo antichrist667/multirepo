@@ -18,7 +18,7 @@ app.post('/register', (req, res) => {
   const newUser = { id: users.length + 1, username, password };
   users.push(newUser);
   
-  res.status(201).json({ message: 'Usuario registrado exitosamente', user: newUser });
+  res.status(201).json({ message: 'User registered succesfully', user: newUser });
 });
 
 // Endpoint to get all users
