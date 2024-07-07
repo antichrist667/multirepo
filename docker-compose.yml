@@ -1,12 +1,12 @@
 version: "3.8"
 services:
-  microservice-registration:
+  registration-service:
    build: ./registration-service
    ports:
      - 8082:3001
    networks:
      - microservices-network
-  microservice-login:
+  login-service:
    build: ./login-service
    ports:
      - 8083:3002
@@ -14,7 +14,9 @@ services:
      - JWT_SECRET=your_jwt_secret
    networks:
       - microservices-network
-  microservice-update:
+   depends_on:
+      - registration-service
+  update-service:
    build: ./update-service
    ports:
      - 8084:3003
@@ -22,6 +24,8 @@ services:
      - JWT_SECRET=your_jwt_secret
    networks:
       - microservices-network
+   depends_on:
+      - login-service
 networks:
   microservices-network:
-    external: true
+    driver: bridge

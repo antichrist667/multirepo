@@ -1,26 +1,32 @@
+// registration-service/server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 3001;
+const port = 3001;
 
+// Middleware
 app.use(bodyParser.json());
 
+// Lista de usuarios en memoria
 const users = [];
 
+// Endpoint para registrar un nuevo usuario
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
-  if (users.find(user => user.username === username)) {
-    return res.status(400).json({ message: 'User already exists' });
-  }
-  users.push({ username, password });
-  res.status(201).json({ message: 'User registered successfully' });
+  
+  // Agregar el nuevo usuario a la lista en memoria
+  const newUser = { id: users.length + 1, username, password };
+  users.push(newUser);
+  
+  res.status(201).json({ message: 'Usuario registrado exitosamente', user: newUser });
 });
 
-app.get('/register', (req, res) => {
+// Endpoint para obtener todos los usuarios
+app.get('/users', (req, res) => {
   res.json(users);
 });
 
-app.listen(PORT, () => {
-  console.log(`Registration service is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Registration service running at http://localhost:${port}/`);
 });
