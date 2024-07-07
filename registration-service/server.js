@@ -27,6 +27,21 @@ app.get('/users', (req, res) => {
   res.json(users);
 });
 
+// Update user endpoint
+app.put('/users/:id', (req, res) => {
+  const { id } = req.params;
+  const { username, password } = req.body;
+  const user = users.find(u => u.id === parseInt(id));
+
+  if (user) {
+    user.username = username || user.username;
+    user.password = password || user.password;
+    res.json({ message: 'User updated successfully', user });
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Registration service running at http://localhost:${port}/`);
 });
