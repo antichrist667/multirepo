@@ -6,11 +6,7 @@ const PORT = 3001;
 
 app.use(bodyParser.json());
 
-let users = [
-  { username: 'user1', password: 'password1' },
-  { username: 'user2', password: 'password2' },
-  { username: 'user3', password: 'password3' }
-];
+const users = [];
 
 app.post('/register', (req, res) => {
   const { username, password } = req.body;
@@ -19,6 +15,10 @@ app.post('/register', (req, res) => {
   }
   users.push({ username, password });
   res.status(201).json({ message: 'User registered successfully' });
+});
+
+app.get('/register', (req, res) => {
+  res.json(users);
 });
 
 app.listen(PORT, () => {
