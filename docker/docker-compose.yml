@@ -19,7 +19,7 @@ services:
   update-service:
    build: ./update-service
    ports:
-     - 8084:3006
+     - 8087:3006
    environment:
      - JWT_SECRET=your_jwt_secret
    networks:
