@@ -3,13 +3,13 @@ services:
   registration-service:
    build: ./registration-service
    ports:
-     - 8082:3001
+     - 8085:3004
    networks:
      - microservices-network
   login-service:
    build: ./login-service
    ports:
-     - 8083:3002
+     - 8086:3005
    environment:
      - JWT_SECRET=your_jwt_secret
    networks:
@@ -19,7 +19,7 @@ services:
   update-service:
    build: ./update-service
    ports:
-     - 8084:3003
+     - 8084:3006
    environment:
      - JWT_SECRET=your_jwt_secret
    networks:

@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3001;
+const port = 3004;
 
 // Middleware
 app.use(bodyParser.json());
@@ -42,5 +42,5 @@ app.put('/users/:id', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Registration service running at http://localhost:${port}/`);
+  console.log(`Registration service running at ${port}/`);
 });

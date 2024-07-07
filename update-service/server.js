@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 
 const app = express();
-const port = 3003;
+const port = 3006;
 
 app.use(bodyParser.json());
 
@@ -13,7 +13,7 @@ app.put('/update', async (req, res) => {
 
   try {
     // Fetch the list of users
-    const response = await axios.get('http://registration-service:3001/users');
+    const response = await axios.get('http://registration-service:3004/users');
     const users = response.data;
 
     // Find the user by username and password
@@ -27,7 +27,7 @@ app.put('/update', async (req, res) => {
     user.password = newPassword || user.password;
 
     // Send the updated user back to the registration service
-    await axios.put(`http://registration-service:3001/users/${user.id}`, user);
+    await axios.put(`http://registration-service:3004/users/${user.id}`, user);
     
     res.json({ message: 'User credentials updated successfully', user });
   } catch (error) {
@@ -36,5 +36,5 @@ app.put('/update', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Update service running at http://localhost:${port}/`);
+  console.log(`Update service running at ${port}/`);
 });

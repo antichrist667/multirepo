@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 
 const app = express();
-const port = 3002;
+const port = 3005;
 
 app.use(bodyParser.json());
 
@@ -11,7 +11,7 @@ app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const response = await axios.get('http://registration-service:3001/users');
+    const response = await axios.get('http://registration-service:3004/users');
     const users = response.data;
 
     const user = users.find(u => u.username === username);
@@ -30,5 +30,5 @@ app.post('/login', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Login service running at http://localhost:${port}/`);
+  console.log(`Login service running at ${port}/`);
 });
