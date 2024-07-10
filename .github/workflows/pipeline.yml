@@ -47,3 +47,41 @@ jobs:
     - name: Execute Docker Compose
       run: |
         docker-compose -f ./docker/docker-compose.yml up -d
+ 
+  deploy-AWS:
+    needs: [build-and-push]  
+    runs-on: ubuntu-latest
+
+    steps:
+      
+    - name: Set permissions for private key
+      run: |
+        echo "${{ secrets.AWS_PRIVATE_KEY }}" > key.pem
+        chmod 600 key.pem
+
+    - name: Pull Docker images
+      run: |
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/login-service:latest'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/registration-service:latest'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/update-service:latest'
+        
+        
+    - name: Stop running containers
+      run: |
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker stop login-service-plataform-aws || true'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker rm login-service-plataform-aws || true'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker stop registration-service-plataform-aws || true'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker rm registration-service-plataform-aws || true'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker stop update-service-plataform-aws || true'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker rm update-service-plataform-aws || true'
+
+    - name: Remove old Docker images
+      run: |
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker image prune -f'
+
+    - name: Run new containers
+      run: |
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker run -d --name login-service-plataform-aws -p 8085:3004 ${{ secrets.DOCKERHUB_USERNAME }}/login-service:latest'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker run -d --name registration-plataform-aws -p 8086:3005 ${{ secrets.DOCKERHUB_USERNAME }}/registration-service:latest'
+        ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@${{ secrets.EC2_HOST }} 'sudo docker run -d --name update-service-plataform-aws -p 8087:3006 ${{ secrets.DOCKERHUB_USERNAME }}/update-service:latest'
+        
